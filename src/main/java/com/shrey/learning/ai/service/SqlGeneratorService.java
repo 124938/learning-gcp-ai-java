@@ -1,9 +1,7 @@
 package com.shrey.learning.ai.service;
 
 import com.google.genai.Client;
-import com.google.genai.types.GenerateContentConfig;
-import com.google.genai.types.GenerateContentResponse;
-import com.google.genai.types.Tool;
+import com.google.genai.types.*;
 import com.shrey.learning.ai.tool.SchemaTool;
 import org.springframework.stereotype.Service;
 
@@ -30,11 +28,16 @@ public class SqlGeneratorService {
                 ).build()
         );
 
+        // Sets the system instruction in the config.
+        Content systemInstruction = Content.fromParts(
+                Part.fromText("You are SQL generator agent and you always need to use getSchema method to generate query")
+        );
+
         // Create content configuration
         this.contentConfig = GenerateContentConfig.builder()
                 .tools(tools)
+                .systemInstruction(systemInstruction)
                 .build();
-
     }
 
     public String generate(final String prompt) {
